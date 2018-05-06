@@ -1,7 +1,6 @@
 import Data.Conduit.LZ4
 import Data.Conduit
 import Data.Conduit.Binary
-import Control.Monad.Trans.Resource
 import System.Environment
 import System.IO
 
@@ -17,6 +16,6 @@ main = do
        _ -> Nothing
   case conduit of
     Nothing -> help
-    Just conduit' -> runResourceT $ sourceHandle stdin $$ conduit' =$= sinkHandle stdout
+    Just conduit' -> runConduitRes $ sourceHandle stdin .| conduit' .| sinkHandle stdout
   where
   help = hPutStrLn stderr "optionally supply acceleration value (Int) as first argument (any negative number for decompression)\ntool will then use stdin/stdout"
